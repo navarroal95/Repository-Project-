@@ -1,7 +1,3 @@
-"""Hey alan, you can run this code by saving the file, then in the terminal typing "python -m streamlit run App.py".
-When you do this, this should open a browser on your local machine. It won't be publicly accessible yet, but it helps with faster development.
-When you're done checking the output, you can click back in the vscode terminal and press 'ctrl+c' to stop the program from running the web page.
-"""
 
 #import the packages we need
 import streamlit as st
