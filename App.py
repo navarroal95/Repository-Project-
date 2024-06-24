@@ -11,7 +11,7 @@ df = pd.read_csv("./vehicles_us.csv")
 df['manufacturer'] = df['model'].str.split().str[0]
 
 # Add the required st.header
-st.header("Python Project", divider='rainbow')
+st.header("Python Project")
 
 st.write("The first five rows of our dataframe, with an added 'manufacturer' column:")
 st.write(df.head())
