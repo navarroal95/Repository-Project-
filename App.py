@@ -21,9 +21,9 @@ st.write("This dataset contains vehicle listings with various attributes includi
 # Generate a histogram of days listed
 figA = px.histogram(df, x="days_listed", nbins=64, title='Days Listed Histogram')
 st.plotly_chart(figA, use_container_width=True)
-st.write("maximum days listed: " + str(max(df['days_listed'])))
-st.write("minimum days listed: " + str(min(df['days_listed'])))
-st.write("average days listed: " + str(sum(df['days_listed'])/len(df['days_listed'])))
+st.write(f"Maximum days listed: {df['days_listed'].max()}")
+st.write(f"Minimum days listed: {df['days_listed'].min()}")
+st.write(f"Average days listed: {df['days_listed'].mean():.2f}")
 st.write("This is a 'right-skewed' distribution. Notice the climax of this distribution is around 20, but the average number of days listed is 40. That's because of the outliers towards the right side.")
 
 # df_small is a dataframe without prices above 100k, i do this to clean the boxplot chart and you should mention this in your analysis if you keep it like this
