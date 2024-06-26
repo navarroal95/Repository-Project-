@@ -1,4 +1,3 @@
-#import the packages we need
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -6,11 +5,27 @@ import plotly.express as px
 # Import our vehicles data
 df = pd.read_csv("./vehicles_us.csv")
 
-# Ensure the 'price' column is numeric and handle any conversion errors
-df['price'] = pd.to_numeric(df['price'], errors='coerce')
-
 # Extract the manufacturer name from the model column, creating a new column called "manufacturer"
 df['manufacturer'] = df['model'].str.split().str[0]
+
+# Ensure the 'price' column is of integer type
+df['price'] = pd.to_numeric(df['price'], errors='coerce').fillna(0).astype(int)
+
+# Ensure the 'model_year' column is of integer type
+df['model_year'] = pd.to_numeric(df['model_year'], errors='coerce').fillna(0).astype(int)
+
+# Ensure the 'cylinders' column is of integer type
+df['cylinders'] = pd.to_numeric(df['cylinders'], errors='coerce').fillna(0).astype(int)
+
+# Ensure the 'odometer' column is of float type
+df['odometer'] = pd.to_numeric(df['odometer'], errors='coerce').fillna(0.0)
+
+# Ensure the 'is_4wd' column is of integer type
+df['is_4wd'] = pd.to_numeric(df['is_4wd'], errors='coerce').fillna(0).astype(int)
+
+# Check the data types of the DataFrame
+st.write("Data types of the DataFrame columns:")
+st.write(df.dtypes)
 
 # Add the required st.header
 st.header("Python Project")
@@ -20,14 +35,6 @@ st.write(df.head())
 st.write("Our dataframe has " + str(df.shape[0]) + " rows, and " + str(df.shape[1])+ " columns: ")
 st.write("This dataset contains vehicle listings with various attributes including the model, condition, number of cylinders, fuel type, odometer reading, transmission type, vehicle type, paint color, 4WD indicator, date posted, and days listed. The listings encompass a variety of models from different manufacturers, each extracted from the model name. Vehicle conditions range from 'fair' to 'like new' and 'excellent,' indicating the quality and maintenance level of the cars. The dataset also includes critical information such as the odometer readings, which reflect the mileage of the vehicles, and the days listed, showing how long each vehicle has been on the market. The transmission types are all automatic in this sample, and vehicle types include SUVs, pickups, and sedans. This comprehensive set of attributes allows for a detailed analysis of factors influencing vehicle listings and their market dynamics.")
 
-# Try converting the dataframe to an Arrow Table and catch any exceptions
-try:
-    import pyarrow as pa
-    table = pa.Table.from_pandas(df)
-    st.write("Arrow Table conversion successful.")
-except Exception as e:
-    st.write(f"Arrow Table conversion failed: {e}")
-
 # Generate a histogram of days listed
 figA = px.histogram(df, x="days_listed", nbins=64, title='Days Listed Histogram')
 st.plotly_chart(figA, use_container_width=True)
@@ -36,7 +43,7 @@ st.write(f"Minimum days listed: {df['days_listed'].min()}")
 st.write(f"Average days listed: {df['days_listed'].mean():.2f}")
 st.write("This is a 'right-skewed' distribution. Notice the climax of this distribution is around 20, but the average number of days listed is 40. That's because of the outliers towards the right side.")
 
-# df_small is a dataframe without prices above 100k, I do this to clean the boxplot chart and you should mention this in your analysis if you keep it like this
+# df_small is a dataframe without prices above 100k, i do this to clean the boxplot chart and you should mention this in your analysis if you keep it like this
 df_small = df[df['price'] < 100000]
 figB = px.box(df_small, category_orders={"condition":["salvage", "fair", "good", "like new", "new", "excellent"]}, x="condition", y="price", title='Price Boxplot by Condition')
 st.plotly_chart(figB, use_container_width=True)
@@ -46,14 +53,14 @@ st.write("""The condition with the largest spread in price is "new", with a q1 o
 df_myp = df[['model_year', 'price']].groupby(['model_year']).mean().reset_index()
 figC = px.bar(data_frame=df_myp, x='model_year', y="price", title='Average Price by Model Year')
 st.plotly_chart(figC, use_container_width=True)
-st.write("Cars tend to increase in price the newer they are. However, when a car is around 40-50 years old it has a chance to increase in price, these are antiques. This chart could be used to forecast the changes in car prices next year, or the time it takes for an antique car to appreciate in value.")
+st.write("Cars tend to increase in price the newer they are. However, when a car is around 40-50 years old it has a chance to increase in price, these are antiques.This chart could be used to forecast the changes in car prices next year, or the time it takes for an antique car to appreciate in value.")
 
 # Create a smaller dataframe with just manufacturer and price so we can calculate the mean price for each
 df_mp = df[['manufacturer', 'price']].groupby(['manufacturer']).mean().sort_values(by=["price"], ascending=False).reset_index()
 # Generate the plot using our grouped and sorted dataframe
 figD = px.bar(data_frame=df_mp, x='manufacturer', y="price", title='Average Price by Manufacturer')
 st.plotly_chart(figD, use_container_width=True)
-st.write("Most expensive car manufacturer is mercedes-benz. However, this is likely because they only have one car model in this dataset.")
+st.write("Most expensive car manufacturer is mercededs-benz. However, this is likely because they only have one car model in this dataset.")
 
 # I put the next lines here instead of in the 'if' statement so this processes before you check the box. This makes it run a bit faster.
 
