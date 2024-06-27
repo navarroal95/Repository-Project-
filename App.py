@@ -23,9 +23,10 @@ df['odometer'] = pd.to_numeric(df['odometer'], errors='coerce').fillna(0.0)
 # Ensure the 'is_4wd' column is of integer type
 df['is_4wd'] = pd.to_numeric(df['is_4wd'], errors='coerce').fillna(0).astype(int)
 
-# Check the data types of the DataFrame
-st.write("Data types of the DataFrame columns:")
-st.write(df.dtypes)
+# Ensure the 'date_posted' column is of datetime type
+df['date_posted'] = pd.to_datetime(df['date_posted'], errors='coerce')
+
+
 
 # Add the required st.header
 st.header("Python Project")
@@ -75,5 +76,7 @@ detail = st.checkbox("Detailed view")
 if detail:
     st.plotly_chart(figD, use_container_width=True)
     st.write("Ford and Chevrolet have two of the three most expensive car models (from most to least expensive: mercedes-benz benze sprinter 2500, chevrolet silverado 1500 crew, ford mustang gt coupe 2d)\n    However, they also have two of the three least expensive car models (from least to most expensive: chevrolet trailblazer, ford taurus, dodge dakota)")
+
+
 
 
